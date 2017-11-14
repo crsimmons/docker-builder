@@ -1,0 +1,12 @@
+#!/bin/bash -eu
+
+FLY_TARGET=$1
+DOCKER_HUB_REPO=$2
+DOCKERFILE_PATH=$3
+
+fly -t "$FLY_TARGET" set-pipeline \
+  -p docker-builder \
+  -c pipeline.yml \
+  -l secrets.yml \
+  -v docker_hub_repo="$DOCKER_HUB_REPO" \
+  -v dockerfile="$(cat "$DOCKERFILE_PATH")"

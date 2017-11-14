@@ -1,0 +1,36 @@
+---
+resources:
+- name: dockerhub
+  type: docker-image
+  source:
+    repository: ((docker_hub_repo))
+    username: ((username))
+    password: ((password))
+
+- name: pipeline-image
+  type: docker-image
+  source:
+    repository: zhadow/pipeline-image
+
+jobs:
+- name: build-image
+  plan:
+  - get: pipeline-image
+  - task: build-dockerfile
+    image: pipeline-image
+    config:
+      platform: linux
+      outputs:
+      - name: dockerfile
+      params:
+        DOCKERFILE: ((dockerfile))
+      run:
+        path: sh
+        args:
+          - -xeuc
+          - |
+            mkdir -p dockerfile
+            echo "$DOCKERFILE" > dockerfile/Dockerfile
+  - put: dockerhub
+    params:
+      build: dockerfile
