@@ -4,8 +4,8 @@ resources:
   type: docker-image
   source:
     repository: ((docker_hub_repo))
-    username: ((username))
-    password: ((password))
+    username: ((docker_user))
+    password: ((docker_password))
 
 - name: pipeline-image
   type: docker-image
